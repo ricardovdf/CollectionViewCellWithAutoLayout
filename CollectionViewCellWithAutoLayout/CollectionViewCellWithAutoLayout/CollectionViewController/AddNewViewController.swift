@@ -215,7 +215,7 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
                 }
                 
                 let sectionLabel: UILabel = UILabel(frame: CGRectMake(0, 0, collectionView.frame.size.width, headerHeight()))
-                sectionLabel.text = NSLocalizedString("Add", comment: "")
+                sectionLabel.text = NSLocalizedString("Title for Section Header", comment: "")
                 sectionLabel.backgroundColor = UIColor.clearColor()
                 sectionLabel.textAlignment = .Center
                 sectionLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
