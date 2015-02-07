@@ -1,0 +1,10 @@
+target 'CollectionViewCellWithAutoLayout' do
+
+pod 'PureLayout', '~> 2.0'
+
+end
+
+target 'CollectionViewCellWithAutoLayoutTests' do
+
+end
+
