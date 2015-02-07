@@ -1,16 +1,16 @@
 //
 //  AddNewCell.swift
-//  TableViewCellWithAutoLayout
+//  CollectionViewCellWithAutoLayout
 //
-//  Created by Charlie Bartel on 12/30/14.
-//  Copyright (c) 2014 RobotJackalope. All rights reserved.
+//  Created by Charlie Bartel on 2/6/15.
+//  Copyright (c) 2015 CharlieBartel. All rights reserved.
 //
 
 import UIKit
 
 class OffSetLabel: UILabel {
     
-    var offset: CGFloat = 10.0
+    private var offset: CGFloat = 10.0
     
     override func drawTextInRect(rect: CGRect) {
         let newRect = CGRectOffset(rect, offset, 0)
@@ -26,20 +26,20 @@ class AddNewCell: UICollectionViewCell {
     }
     
     var horizontalInsets: CGFloat = 16.0
-    let verticalInsets: CGFloat = 2.0
+    var titleLabel: OffSetLabel = OffSetLabel.newAutoLayoutView()
+    var imageView: UIImageView = UIImageView.newAutoLayoutView()
     let imageSize: CGFloat = 42.0
     
-    var didSetupConstraints = false
+    private let verticalInsets: CGFloat = 2.0
+    private var didSetupConstraints = false
+    private var titleLayoutConstraint : NSLayoutConstraint? = nil
+    private var imageLayoutConstraint : NSLayoutConstraint? = nil
     
-    var titleLabel: OffSetLabel = OffSetLabel.newAutoLayoutView()
-    var titleLayoutConstraint : NSLayoutConstraint? = nil
-    
-    var imageView: UIImageView = UIImageView.newAutoLayoutView()
-    var imageLayoutConstraint : NSLayoutConstraint? = nil
-    
-    var cellType: AddCellType = .Vertical
-    var containerBackgroundColor: UIColor = UIColor.brownColor()
-    var titleBackgroundColor: UIColor = UIColor.clearColor()
+    private var cellType: AddCellType = .Vertical
+    private let containerBackgroundColor: UIColor = UIColor.clearColor()
+    private let titleBackgroundColorVertical: UIColor = UIColor.clearColor()
+    private let titleBackgroundColorHorizontal: UIColor = UIColor.grayColor()
+    private let highlightColor: UIColor = UIColor.darkGrayColor()
     
     // --------------------------------------------------------------------------------
     // MARK: -
@@ -69,11 +69,11 @@ class AddNewCell: UICollectionViewCell {
                 imageView.autoSetDimension(.Height, toSize: imageSize)
                 imageView.autoSetDimension(.Width, toSize: imageSize)
                 imageView.autoAlignAxisToSuperviewAxis(.Vertical)
-            
+                
                 titleLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: imageView, withOffset: 0, relation: .Equal)
                 titleLabel.autoPinEdgeToSuperviewEdge(.Left, withInset: 0)
                 titleLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 0)
-                titleLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 0)
+                titleLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 8)
                 
             } else {
                 
@@ -100,12 +100,12 @@ class AddNewCell: UICollectionViewCell {
     override var highlighted: Bool {
         didSet {
             if (highlighted) {
-                contentView.backgroundColor = (cellType == .Vertical) ? UIColor.darkGrayColor() : UIColor.clearColor()
-                titleLabel.backgroundColor = (cellType == .Vertical) ? titleBackgroundColor : UIColor.darkGrayColor()
+                contentView.backgroundColor = (cellType == .Vertical) ? highlightColor : UIColor.clearColor()
+                titleLabel.backgroundColor = (cellType == .Vertical) ? titleBackgroundColorVertical : highlightColor
                 titleLabel.textColor = UIColor.whiteColor()
             } else {
                 contentView.backgroundColor = containerBackgroundColor
-                titleLabel.backgroundColor = (cellType == .Vertical) ? titleBackgroundColor : UIColor.grayColor()
+                titleLabel.backgroundColor = (cellType == .Vertical) ? titleBackgroundColorVertical : titleBackgroundColorHorizontal
                 titleLabel.textColor = UIColor.blackColor()
             }
             
@@ -117,13 +117,14 @@ class AddNewCell: UICollectionViewCell {
     // MARK: Private Methods
     // --------------------------------------------------------------------------------
     
-    func setupViews() {
+    private func setupViews() {
         titleLabel.lineBreakMode = .ByTruncatingTail
         titleLabel.numberOfLines = 0
         titleLabel.textColor = UIColor.blackColor()
         
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
         imageView.backgroundColor = UIColor(red: 1, green: 0, blue: 1, alpha: 1)
+        imageView.tintColor = UIColor.whiteColor()
         
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
@@ -138,12 +139,10 @@ class AddNewCell: UICollectionViewCell {
     func updateCell(type: AddCellType) {
         cellType = type
         if (cellType == .Vertical) {
-            titleLabel.offset = 0;
+            titleLabel.offset = 0
             titleLabel.textAlignment = .Center
-            titleLabel.backgroundColor = titleBackgroundColor
+            titleLabel.backgroundColor = titleBackgroundColorVertical
         } else {
-            
-            println("updateCell horizontalInsets \(horizontalInsets)");
             
             // The horizontalInsets change on rotation so update the constraint as needed
             imageLayoutConstraint?.active = false
@@ -152,9 +151,9 @@ class AddNewCell: UICollectionViewCell {
             titleLayoutConstraint?.active = false
             titleLayoutConstraint = titleLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: horizontalInsets)
             
-            titleLabel.offset = 10.0;
+            titleLabel.offset = 10.0
             titleLabel.textAlignment = .Left
-            titleLabel.backgroundColor = UIColor.grayColor()
+            titleLabel.backgroundColor = titleBackgroundColorHorizontal
         }
         
         titleLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleCaption1)
