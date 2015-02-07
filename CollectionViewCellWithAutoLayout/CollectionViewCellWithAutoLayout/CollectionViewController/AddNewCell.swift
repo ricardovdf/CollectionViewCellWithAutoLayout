@@ -24,8 +24,7 @@ class AddNewCell: UICollectionViewCell {
         case Vertical
         case Horizontal
     }
-    
-    var horizontalInsets: CGFloat = 16.0
+
     var titleLabel: OffSetLabel = OffSetLabel.newAutoLayoutView()
     var imageView: UIImageView = UIImageView.newAutoLayoutView()
     let imageSize: CGFloat = 42.0
@@ -133,10 +132,10 @@ class AddNewCell: UICollectionViewCell {
     
     // --------------------------------------------------------------------------------
     // MARK: -
-    // MARK: Public Methods
+    // MARK: Internal Methods
     // --------------------------------------------------------------------------------
     
-    func updateCell(type: AddCellType) {
+    func updateCell(type: AddCellType, horizontalInsets: CGFloat) {
         cellType = type
         if (cellType == .Vertical) {
             titleLabel.offset = 0

@@ -179,8 +179,8 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
         if let cell: AddNewCell = collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath) as? AddNewCell {
         
             cell.hidden = isHiddenCell(indexPath)
-            cell.horizontalInsets = (verticalCellWidth() - cell.imageSize) / 2
-            isHorizontalCell(indexPath) ? cell.updateCell(.Horizontal) : cell.updateCell(.Vertical)
+            let insets = (verticalCellWidth() - cell.imageSize) / 2
+            isHorizontalCell(indexPath) ? cell.updateCell(.Horizontal, horizontalInsets: insets) : cell.updateCell(.Vertical, horizontalInsets: insets)
             
             let modelItem = model.dataArray[indexPath.row]
             cell.titleLabel.text = modelItem.title
