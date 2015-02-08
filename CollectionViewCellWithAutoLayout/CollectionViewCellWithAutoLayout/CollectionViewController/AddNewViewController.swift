@@ -1,9 +1,9 @@
 //
 //  AddNewViewController.swift
-//  TableViewCellWithAutoLayout
+//  CollectionViewCellWithAutoLayout
 //
-//  Created by Charlie Bartel on 12/30/14.
-//  Copyright (c) 2014 RobotJackalope. All rights reserved.
+//  Created by Charlie Bartel on 2/6/15.
+//  Copyright (c) 2015 CharlieBartel. All rights reserved.
 //
 
 import Foundation
@@ -15,48 +15,58 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
     
     // --------------------------------------------------------------------------------
     // MARK: -
-    // MARK: Private Methods
+    // MARK: Internal Methods
     // --------------------------------------------------------------------------------
-    
-    func updateViews() {
-        collectionView?.frame = getCollectionViewFrame()
-        collectionView?.reloadData()
-    }
     
     // This function will be called when the Dynamic Type user setting changes (from the system Settings app)
     func contentSizeCategoryChanged(notification: NSNotification) {
         collectionView?.reloadData()
     }
     
-    func cellCount() -> Int {
+    // --------------------------------------------------------------------------------
+    // MARK: -
+    // MARK: Private Methods
+    // --------------------------------------------------------------------------------
+    
+    private func updateViews() {
+        collectionView?.frame = getCollectionViewFrame()
+        collectionView?.reloadData()
+    }
+    
+    private func cellCount() -> Int {
         let orientation = UIApplication.sharedApplication().statusBarOrientation
         return orientation.isPortrait ? 18 : 16
     }
     
-    func rowCellCount() -> CGFloat {
+    private func rowCellCount() -> CGFloat {
         let orientation = UIApplication.sharedApplication().statusBarOrientation
         return orientation.isPortrait ? 4 : 7
     }
     
-    func isHorizontalCell(indexPath: NSIndexPath) -> Bool {
+    private func isHorizontalCell(indexPath: NSIndexPath) -> Bool {
         return indexPath.row >= (cellCount() - 2)
     }
     
-    func isHiddenCell(indexPath: NSIndexPath) -> Bool {
+    private func isHiddenCell(indexPath: NSIndexPath) -> Bool {
         let orientation = UIApplication.sharedApplication().statusBarOrientation
         return (orientation.isPortrait && (indexPath.row == cellCount() - 4 || indexPath.row == cellCount() - 3))
     }
     
+    private func getRow(indexPath: NSIndexPath) -> Int {
+        let orientation = UIApplication.sharedApplication().statusBarOrientation
+        return (orientation.isPortrait && isHorizontalCell(indexPath)) ? indexPath.row - 2 : indexPath.row
+    }
+    
     // --------------------------------------------------------------------------------
     // MARK: -
-    // MARK: Size Methods
+    // MARK: Private Size Methods
     // --------------------------------------------------------------------------------
     
-    func horizontalCellSize() -> CGSize {
+    private func horizontalCellSize() -> CGSize {
         return CGSize(width: horizontalCellWidth(), height: 50.0)
     }
     
-    func horizontalCellWidth() -> CGFloat {
+    private func horizontalCellWidth() -> CGFloat {
         let orientation = UIApplication.sharedApplication().statusBarOrientation
         if orientation.isPortrait {
             return getCollectionViewWidth() - (leftRightInset() * 2)
@@ -65,15 +75,15 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
         }
     }
     
-    func verticalCellSize() -> CGSize {
+    private func verticalCellSize() -> CGSize {
         return CGSize(width: verticalCellWidth(), height: 75.0)
     }
     
-    func verticalCellWidth() -> CGFloat {
+    private func verticalCellWidth() -> CGFloat {
         return (getCollectionViewWidth() - (leftRightInset() * (rowCellCount() + 1)))  / rowCellCount()
     }
     
-    func getCollectionViewWidth() -> CGFloat {
+    private func getCollectionViewWidth() -> CGFloat {
         let orientation = UIApplication.sharedApplication().statusBarOrientation
         if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
             return self.view.frame.size.width
@@ -82,7 +92,7 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
         }
     }
     
-    func getCollectionViewHeight() -> CGFloat {
+    private func getCollectionViewHeight() -> CGFloat {
         let orientation = UIApplication.sharedApplication().statusBarOrientation
         if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
             return self.view.frame.size.height
@@ -91,7 +101,7 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
         }
     }
     
-    func getCollectionViewFrame() -> CGRect {
+    private func getCollectionViewFrame() -> CGRect {
         if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
             return CGRectMake(0, 0, getCollectionViewWidth(), getCollectionViewHeight())
         } else {
@@ -99,15 +109,15 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
         }
     }
     
-    func headerHeight() -> CGFloat {
+    private func headerHeight() -> CGFloat {
         return 40.0
     }
     
-    func leftRightInset() -> CGFloat {
+    private func leftRightInset() -> CGFloat {
         return 4.0
     }
     
-    func bottomInset() -> CGFloat {
+    private func bottomInset() -> CGFloat {
         return 4.0
     }
     
@@ -150,8 +160,8 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
         
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: leftRightInset(), bottom: bottomInset(), right: leftRightInset())
-        layout.minimumInteritemSpacing = leftRightInset();
-        layout.minimumLineSpacing = bottomInset();
+        layout.minimumInteritemSpacing = leftRightInset()
+        layout.minimumLineSpacing = bottomInset()
         
         collectionView = UICollectionView(frame: getCollectionViewFrame(), collectionViewLayout: layout)
         collectionView!.dataSource = self
@@ -160,6 +170,7 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
         collectionView!.registerClass(AddNewCell.self, forCellWithReuseIdentifier: "CellHorizontal")
         collectionView!.registerClass(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "HeaderView")
         collectionView!.backgroundColor = UIColor.lightGrayColor()
+        self.view.backgroundColor = UIColor.lightGrayColor()
         self.view.addSubview(collectionView!)
         self.edgesForExtendedLayout = .None
     }
@@ -174,29 +185,29 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-
+        
         let identifier = isHorizontalCell(indexPath) ? "CellHorizontal" : "CellVertical"
         if let cell: AddNewCell = collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath) as? AddNewCell {
-        
+            
             cell.hidden = isHiddenCell(indexPath)
             let insets = (verticalCellWidth() - cell.imageSize) / 2
             isHorizontalCell(indexPath) ? cell.updateCell(.Horizontal, horizontalInsets: insets) : cell.updateCell(.Vertical, horizontalInsets: insets)
             
-            let modelItem = model.dataArray[indexPath.row]
+            let modelItem = model.dataArray[getRow(indexPath)]
             cell.titleLabel.text = modelItem.title
             cell.imageView.image = UIImage(named: "star")
             cell.isAccessibilityElement = true
             cell.accessibilityLabel = cell.titleLabel.text
-        
+            
             // Make sure the constraints have been added to this cell, since it may have just been created from scratch
             cell.setNeedsUpdateConstraints()
             cell.updateConstraintsIfNeeded()
-        
+            
             return cell
         }
-    
-    assert(false, "The dequeued cell was of an unknown type!");
-    return UICollectionViewCell();
+        
+        assert(false, "The dequeued cell was of an unknown type!")
+        return UICollectionViewCell()
         
     }
     
@@ -224,9 +235,17 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
             }
         }
         
-    assert(false, "The view was of an unknown kind!");
-    return UICollectionReusableView();
+        assert(false, "The view was of an unknown kind!")
+        return UICollectionReusableView()
         
+    }
+    
+    // --------------------------------------------------------------------------------
+    // MARK: -
+    // MARK: UICollectionViewDelegate Methods
+    // --------------------------------------------------------------------------------
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
     }
     
     // --------------------------------------------------------------------------------
@@ -239,9 +258,7 @@ class AddNewViewController: UIViewController, UICollectionViewDelegateFlowLayout
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.size.width, height: headerHeight());
+        return CGSize(width: collectionView.frame.size.width, height: headerHeight())
     }
-
 }
-
 
