@@ -1,5 +1,5 @@
 # CollectionViewCellWithAutoLayout
-Sample project demonstrating Collection view cells with AutoLayout in iOS 8 written in Swift
+Swift project demonstrating Collection view cells with AutoLayout in iOS 8
 
 - Implements AutoLayout with [PureLayout](https://github.com/smileyborg/PureLayout)
 - No storyboards, all UI is done programmatically
