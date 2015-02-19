@@ -69,9 +69,9 @@ class AddNewCell: UICollectionViewCell {
                 imageView.autoSetDimension(.Width, toSize: imageSize)
                 imageView.autoAlignAxisToSuperviewAxis(.Vertical)
                 
-                titleLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: imageView, withOffset: 0, relation: .Equal)
-                titleLabel.autoPinEdgeToSuperviewEdge(.Left, withInset: 0)
-                titleLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: 0)
+                titleLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: imageView)
+                titleLabel.autoPinEdgeToSuperviewEdge(.Left)
+                titleLabel.autoPinEdgeToSuperviewEdge(.Right)
                 titleLabel.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 8)
                 
             } else {
@@ -80,7 +80,7 @@ class AddNewCell: UICollectionViewCell {
                 imageView.autoSetDimension(.Width, toSize: imageSize)
                 imageView.autoAlignAxisToSuperviewAxis(.Horizontal)
                 
-                titleLabel.autoPinEdge(.Left, toEdge: .Right, ofView: imageView, withOffset: 0, relation: .Equal)
+                titleLabel.autoPinEdge(.Left, toEdge: .Right, ofView: imageView)
                 titleLabel.autoAlignAxisToSuperviewAxis(.Horizontal)
                 titleLabel.autoSetDimension(.Height, toSize: imageSize)
             }
@@ -144,10 +144,10 @@ class AddNewCell: UICollectionViewCell {
         } else {
             
             // The horizontalInsets change on rotation so update the constraint as needed
-            imageLayoutConstraint?.active = false
+            imageLayoutConstraint?.autoRemove()
             imageLayoutConstraint = imageView.autoPinEdgeToSuperviewEdge(.Left, withInset: horizontalInsets)
             
-            titleLayoutConstraint?.active = false
+            titleLayoutConstraint?.autoRemove()
             titleLayoutConstraint = titleLabel.autoPinEdgeToSuperviewEdge(.Right, withInset: horizontalInsets)
             
             titleLabel.offset = 10.0
